@@ -13,18 +13,20 @@ extern "C"
 {
 #endif
 typedef void * Item;
+typedef const void * CItem;
 typedef struct List * List;
 /**
  * @brief creates a new list.
  * 
  * @param ctor item constructor.
  * @param dtor item destructor.
- * @param compar comparison function between two items.
+ * @param compar comparison function between two items, returns distance between two Items, 
+ *        if their distance is 0, they are equal, conforming to stdlib compar.
  * @return List a new list.
  */
-List newList(Item (*ctor)(Item),
+List newList(Item (*ctor)(CItem),
              void (*dtor)(Item),
-             int (*compar)(Item,Item));
+             int (*compar)(CItem,CItem));
 /**
  * @brief sorts the list using the compar function that was set in creating a new list if
  *        compar is NULL pointer, or uses given compar function if it's not NULL.
@@ -51,7 +53,7 @@ void ListDestroy(List L);
  * @param clone a clone of an item to look for.
  * @return Item the returned item in list ( not a clone but a reference to the actual item).
  */
-Item ListFind(List L,Item clone);
+Item ListFind(List L,CItem clone);
 
 /**
  * @brief looks for clone using used defined compar function in list and calls user defined destructor if found,
@@ -60,15 +62,17 @@ Item ListFind(List L,Item clone);
  * @param L the list. 
  * @param clone a clone of an item to look for.
  */
-void ListDelete(List L, Item clone);
+void ListDelete(List L, CItem clone);
 
 /**
  * @brief adds a clone item to the list.
  * 
  * @param L the list.
  * @param clone 
+ * @return a reference to the item inserted to list ,or a NULL reference if insertion failed 
+ *         ( example : growing the list or allocating new item.)
  */
-void ListInsert(List L, Item clone);
+Item ListInsert(List L, CItem clone);
 
 /**
  * @brief returns how many item are set in the list.
@@ -84,9 +88,7 @@ size_t ListItemsCount(List L);
  * @param L the list.
  * @return size_t number of free slots in the set.
  */
-size_t ListSpaceLeft(List L) {
-
-}
+size_t ListSpaceLeft(List L);
 /**
  * @brief resets the internal List iterator to the first Item
  *        that is set in the list, and returns that Item,
