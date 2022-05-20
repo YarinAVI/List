@@ -11,7 +11,7 @@ struct List {
     Item * GenericArray;
     Item * InternalIterator;
     size_t ArraySize; /* how many pointers to items */
-    size_t items_no; /* how many set items*/
+    size_t ItemsNo; /* how many set items*/
     Item (*ctor)(CItem);
     void (*dtor)(Item);
     int (*compar)(CItem,CItem);
@@ -42,7 +42,7 @@ List newList(Item (*ctor)(CItem),
                  ret->dtor      = dtor;
                  ret->compar    = compar;
 
-                 ret->items_no  = 0;
+                 ret->ItemsNo  = 0;
                  ret->InternalIterator = ret->GenericArray;
         return ret;
              }
@@ -102,6 +102,7 @@ void ListDelete(List L,CItem clone) {
         if(*(Iterator) && L->compar(*Iterator,clone) == 0) {
             L->dtor(*Iterator);
             *Iterator = NULL;
+            L->ItemsNo--;
         }
     }
 }
@@ -111,12 +112,14 @@ Item ListInsert(List L,CItem  clone) {
     if(!L || !clone)
         return NULL;;
     for(i=0;i<L->ArraySize && L->GenericArray[i];i++);
-        if(i == L->ArraySize)  {
+
+    if(i == L->ArraySize)  {
             /* need to increase size */
             if(ListGrow(L))
                 return NULL;
-        }
+    }
     L->GenericArray[i] = L->ctor(clone);
+    L->ItemsNo++;
     return L->GenericArray[i];
 }
 Item ListItRewind(List L) {
@@ -146,12 +149,12 @@ return NULL;
 
 size_t ListItemsCount(List L) {
     if(L)
-        return L->items_no;
+        return L->ItemsNo;
     return (0);
 }
 
 size_t ListSpaceLeft(List L) {
     if(L)
-        return L->ArraySize - L->items_no;
+        return L->ArraySize - L->ItemsNo;
     return 0;
 }
