@@ -15,6 +15,8 @@ extern "C"
 typedef void * Item;
 typedef const void * CItem;
 typedef struct List * List;
+typedef Item const * ItemIt;
+
 /**
  * @brief creates a new list.
  * 
@@ -89,24 +91,11 @@ size_t ListItemsCount(List L);
  * @return size_t number of free slots in the set.
  */
 size_t ListSpaceLeft(List L);
-/**
- * @brief resets the internal List iterator to the first Item
- *        that is set in the list, and returns that Item,
- *        otherwise returns NULL pointer.
- * 
- * @param L the list.
- * @return Item first set item.
- */
-Item ListItRewind(List L);
 
-/**
- * @brief advances the internal List iterator to the next item that is set
- *        if there is none then returns NULL or in any other case.
- * 
- * @param L the list. 
- * @return Item the next set item.
- */
-Item ListGetNextIt(List L);
+
+Item const * ListGetBeginIt(List L);
+
+Item const * ListGetEndIt(List L);
 #ifdef __cplusplus
 }
 #endif

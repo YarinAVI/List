@@ -122,31 +122,6 @@ Item ListInsert(List L,CItem  clone) {
     L->ItemsNo++;
     return L->GenericArray[i];
 }
-Item ListItRewind(List L) {
-    size_t i;
-    if(!L)
-        return NULL;
-    L->InternalIterator = L->GenericArray;
-    for(i=0;i<L->ArraySize;i++,L->InternalIterator++) {
-        if(*(L->InternalIterator))
-            return *(L->InternalIterator);
-    }
-return NULL;
-}
-
-Item ListGetNextIt(List L) {
-    size_t i;
-    if(!L)
-        return NULL;
-
-    L->InternalIterator++;
-    for(i=0;i<L->ArraySize-1;i++,L->InternalIterator++) {
-        if(*(L->InternalIterator))
-            return *(L->InternalIterator);
-    }
-return NULL;
-}
-
 size_t ListItemsCount(List L) {
     if(L)
         return L->ItemsNo;
@@ -157,4 +132,18 @@ size_t ListSpaceLeft(List L) {
     if(L)
         return L->ArraySize - L->ItemsNo;
     return 0;
+}
+
+
+Item const *  ListGetBeginIt(List L) {
+    if(!L)
+        return NULL;
+    return L->GenericArray;
+}
+
+
+Item const *  ListGetEndIt(List L) {
+    if(!L)
+        return NULL;
+    return L->GenericArray + L->ArraySize;
 }
