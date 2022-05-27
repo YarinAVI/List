@@ -147,3 +147,17 @@ Item const *  ListGetEndIt(List L) {
         return NULL;
     return L->GenericArray + L->ArraySize;
 }
+Item ListGet(List L,size_t index) {
+    ItemIt begin = ListGetBeginIt(L);
+    ItemIt end = ListGetEndIt(L);
+    while(begin !=end) {
+        if(*begin) {
+            if(index == 0) {
+                return *begin;
+            }
+            --index;
+        }
+        begin++;
+    }
+    return NULL;
+}

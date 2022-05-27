@@ -96,6 +96,16 @@ size_t ListSpaceLeft(List L);
 Item const * ListGetBeginIt(List L);
 
 Item const * ListGetEndIt(List L);
+
+
+/**
+ * @brief returns item located at index from 0 to ItemsCount.
+ * 
+ * @param L the List
+ * @param index the index.
+ * @return Item returned Item if index is valid, NULL otherwise.
+ */
+Item ListGet(List L,size_t index);
 #ifdef __cplusplus
 }
 #endif
