@@ -8,19 +8,19 @@
 #include "../include/list.h"
 #include <stdlib.h>
 struct List {
-    Item * GenericArray;
-    Item * InternalIterator;
+    LItem * GenericArray;
+    LItem * InternalIterator;
     size_t ArraySize; /* how many pointers to items */
-    size_t ItemsNo; /* how many set items*/
-    Item (*ctor)(CItem);
-    void (*dtor)(Item);
-    int (*compar)(CItem,CItem);
+    size_t LItemsNo; /* how many set items*/
+    LItem (*ctor)(CLItem);
+    void (*dtor)(LItem);
+    int (*compar)(CLItem,CLItem);
 };
 #define base_len 2
 
-List newList(Item (*ctor)(CItem),
-             void (*dtor)(Item),
-             int (*compar)(CItem,CItem))  {
+List newList(LItem (*ctor)(CLItem),
+             void (*dtor)(LItem),
+             int (*compar)(CLItem,CLItem))  {
                  List  ret = malloc(sizeof(struct List));
                  /**
                   * @note handle later..
@@ -29,7 +29,7 @@ List newList(Item (*ctor)(CItem),
                  if(!ret) {return NULL;}
                  
                  ret->ArraySize = base_len;
-                 ret->GenericArray = calloc(ret->ArraySize,sizeof(Item));
+                 ret->GenericArray = calloc(ret->ArraySize,sizeof(LItem));
                  /**
                   * @brief handle later..
                   * 
@@ -42,7 +42,7 @@ List newList(Item (*ctor)(CItem),
                  ret->dtor      = dtor;
                  ret->compar    = compar;
 
-                 ret->ItemsNo  = 0;
+                 ret->LItemsNo  = 0;
                  ret->InternalIterator = ret->GenericArray;
         return ret;
              }
@@ -53,10 +53,10 @@ List newList(Item (*ctor)(CItem),
  * @return int error status(-1) failed, (0) success.
  */
 static int ListGrow(List L) {
-    Item * temp;
+    LItem * temp;
     size_t i = L->ArraySize;
     L->ArraySize *=2;
-    temp = realloc(L->GenericArray,L->ArraySize * sizeof(Item));
+    temp = realloc(L->GenericArray,L->ArraySize * sizeof(LItem));
     if(!temp) {
         L->ArraySize /=2;
         return -1;
@@ -79,8 +79,8 @@ void ListDestroy(List L) {
     free(L);
 }
 
-Item ListFind(List L,CItem clone) {
-    Item * Iterator;
+LItem ListFind(List L,CLItem clone) {
+    LItem * Iterator;
     size_t i;
     if(!L)
         return NULL;
@@ -92,8 +92,8 @@ Item ListFind(List L,CItem clone) {
 return NULL;
 }
 
-void ListDelete(List L,CItem clone) {
-    Item * Iterator;
+void ListDelete(List L,CLItem clone) {
+    LItem * Iterator;
     size_t i;
     if(!L)
         return;
@@ -102,12 +102,12 @@ void ListDelete(List L,CItem clone) {
         if(*(Iterator) && L->compar(*Iterator,clone) == 0) {
             L->dtor(*Iterator);
             *Iterator = NULL;
-            L->ItemsNo--;
+            L->LItemsNo--;
         }
     }
 }
 
-Item ListInsert(List L,CItem  clone) {
+LItem ListInsert(List L,CLItem  clone) {
     size_t i;
     if(!L || !clone)
         return NULL;;
@@ -119,37 +119,37 @@ Item ListInsert(List L,CItem  clone) {
                 return NULL;
     }
     L->GenericArray[i] = L->ctor(clone);
-    L->ItemsNo++;
+    L->LItemsNo++;
     return L->GenericArray[i];
 }
 size_t ListItemsCount(List L) {
     if(L)
-        return L->ItemsNo;
+        return L->LItemsNo;
     return (0);
 }
 
 size_t ListSpaceLeft(List L) {
     if(L)
-        return L->ArraySize - L->ItemsNo;
+        return L->ArraySize - L->LItemsNo;
     return 0;
 }
 
 
-Item const *  ListGetBeginIt(List L) {
+LItem const *  ListGetBeginIt(List L) {
     if(!L)
         return NULL;
     return L->GenericArray;
 }
 
 
-Item const *  ListGetEndIt(List L) {
+LItem const *  ListGetEndIt(List L) {
     if(!L)
         return NULL;
     return L->GenericArray + L->ArraySize;
 }
-Item ListGet(List L,size_t index) {
-    ItemIt begin = ListGetBeginIt(L);
-    ItemIt end = ListGetEndIt(L);
+LItem ListGet(List L,size_t index) {
+    LItemIt begin = ListGetBeginIt(L);
+    LItemIt end = ListGetEndIt(L);
     while(begin !=end) {
         if(*begin) {
             if(index == 0) {
