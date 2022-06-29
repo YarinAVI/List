@@ -122,6 +122,19 @@ LItem const * ListGetEndIt(List L);
  * @return LItem returned LItem if index is valid, NULL otherwise.
  */
 LItem ListGet(List L,size_t index);
+
+/**
+ * @brief iteration macro in order for list.
+ * 
+ */
+#define LIST_FOR_EACH(L,begin,end) for(begin = ListGetBeginIt(L),end = ListGetEndIt(L);begin!=end;begin++)
+
+/**
+ * @brief iteration macro reverse order for list.
+ * 
+ */
+#define LIST_FOR_EACH_REVERSE(L,begin,end) for(begin = ListGetBeginIt(L),end = ListGetEndIt(L)-1;begin<=end;end--)
+
 #ifdef __cplusplus
 }
 #endif

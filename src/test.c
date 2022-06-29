@@ -43,5 +43,15 @@ int main(void) {
    }
    char*  t = ListFind(L,testing[2]);
    printf("found :%s\n",t);
+   LIST_FOR_EACH(L,begin,end) {
+    if(*begin) {
+        printf("->%s\n",(char*)(*begin));
+    }
+   }
+   LIST_FOR_EACH_REVERSE(L,begin,end) {
+    if(*end) {
+        printf("->%s\n",(char*)(*end));
+    }
+   }
    ListDestroy(L);
 }
